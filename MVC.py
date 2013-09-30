@@ -24,9 +24,9 @@ class MVC( object ):
     }
 
     self.cherrypy_config = cherrypy_config
-    self.cherrypy_config['global']['server.sock_port'] = garden_pi_config['webserver']['host_port']
-    self.cherrypy_config['global']['server.sock_host'] = garden_pi_config['webserver']['host_ip']
-    self.cherrypy_config['/']['tools.staticdir.root']  = '%spublic_html' % self.garden_dir
+    #self.cherrypy_config['global']['server.sock_port'] = garden_pi_config['webserver']['host_port']
+    #self.cherrypy_config['global']['server.sock_host'] = garden_pi_config['webserver']['host_ip']
+    #self.cherrypy_config['/']['tools.staticdir.root']  = '%spublic_html' % self.garden_dir
 
   def loadDriver( self, driver_name ):
     path.insert( 1, self.garden_dir + 'drivers' )
