@@ -21,7 +21,7 @@ env = Environment( loader=FileSystemLoader('views') )
 class Root:
     
   def index( self ):
-    view = env.get_template('welcome/index.html')
+    view = env.get_template('base/index.html')
     return view.render( d = {} )
   index.exposed = True
 
