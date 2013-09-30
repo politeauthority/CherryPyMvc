@@ -1,12 +1,23 @@
 #!/usr/bin/python
+#!/usr/bin/python                                                                                                
+# Mysql DB Driver
+# This driver simplifies some of the MySQL interactions
+
+import sys
+import os
+
+sys.path.append( os.path.join(os.path.dirname(__file__), '..', '') )
+from MVC import MVC
+MVC = MVC()
+# End file header
 import MySQLdb as mdb
 
 class DriverMysql( object ):
   def __init__( self ):
-    self.host     = 'localhost'
-    self.dbname   = 'garden'
-    self.user     = 'root'
-    self.password = 'cleancut'
+    self.host     = MVC.db['host']
+    self.dbname   = MVC.db['name']
+    self.user     = MVC.db['user']
+    self.password = MVC.db['pass']
 
   def ex(self, query):
     conn = mdb.connect( self.host, self.user, self.password)
