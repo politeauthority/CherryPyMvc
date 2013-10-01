@@ -44,6 +44,10 @@ class HelperACL( object ):
       if len( self.user_roles ) > 0:
         self.perms = self.getRolePerms( self.user_roles )
     return self.perms
+
+  def getAllRoles( self ):
+    sql = "SELECT * FROM `%s`.`acl_roles`;" % self.database
+    return Mysql.ex( sql )
   
   def getUserRoles( self ):
     roles = []

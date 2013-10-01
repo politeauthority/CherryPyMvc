@@ -23,6 +23,7 @@ class DriverMysql( object ):
     conn = mdb.connect( self.host, self.user, self.password)
     cur = conn.cursor()
     cur.execute( query )
+    conn.commit()
     return cur.fetchall()
 
   def insert(self, table, items ):
@@ -37,6 +38,7 @@ class DriverMysql( object ):
         value_sql = value_sql + '"%s",' % self.escape_string( value )
     value_sql = value_sql.rstrip( value_sql[-1:])
     sql = "INSERT INTO %s.%s (%s) VALUES(%s)" % ( self.dbname, table, column_sql, value_sql )
+    print sql
     self.ex( sql )
 
   def update( self, table, items, where, limit = 1 ):
