@@ -70,16 +70,12 @@ class Root:
       if kwargs['password_1'] == kwargs['password_2']:
         User = MVC.loadModel('User')
         new_user = User.create( kwargs['user_name'], kwargs['email'], kwargs['password_1'] )
-        print new_user
         return new_user
   create_user_submit.exposed = True
 
   def roles( self ):
     ACL = MVC.loadHelper('ACL')
     roles = ACL.getAllRoles()
-    print ''
-    print ''
-    print roles
     data = { 'roles': roles }
     view = env.get_template('base/admin/users/roles.html')    
     return view.render( d = data )
