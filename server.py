@@ -13,24 +13,14 @@ from sys import path
 import cherrypy
 from jinja2 import Environment, FileSystemLoader
 
-path.insert( 1, 'config')
-from webserver_config import settings
-
 env = Environment( loader=FileSystemLoader('views') )
 
-class Root:
-    
+class Admin( object ):
+
   def index( self ):
-    view = env.get_template('base/index.html')
-    return view.render( d = {} )
-  index.exposed = True
-
-
-
-  def admin( self ):
     view = env.get_template('base/admin/login.html')
     return view.render( d = {} )
-  admin.exposed = True
+  index.exposed = True
 
   def dashboard( self ):
     view = env.get_template('base/admin/dashboard.html')
@@ -86,27 +76,19 @@ class Root:
     return view.render( d = {} )
   settings.exposed = True
 
-  #Example exposed method
-  #def weather( self ):
-  #  Weather = MVC.loadModel('Weather')
-  #  tpl_args = {
-  #    'weather_current' : Weather.get_current(),
-  #    'weather_min_max' : Weather.get_min_max(),
-  #  }
-  #  view = env.get_template('weather/index.html')
-  #  return view.render( d = tpl_args )
-  #weather.exposed = True
+class Root( object ):
+  
+  admin = Admin()
 
-root            = Root()
-root.admin      = Root().admin()
-root.dashboard  = Root().dashboard()
-root.users      = Root().users()
-root.info       = Root().info()
-root.create     = Root().create()
-root.create_user_submit = Root().create_user_submit()
-root.roles      = Root().roles()
-root.settings   = Root().settings()
+  def index( self ):
+    view = env.get_template('base/index.html')
+    return view.render( d = {} )
+  index.exposed = True
 
+  def dashboard( self ):
+    view = env.get_template('base/admin/dashboard.html')
+    return view.render( d = {} )
+  dashboard.exposed = True
 
 cherrypy.quickstart(  Root(),  config = MVC.cherrypy_config )
 
