@@ -7,7 +7,7 @@ from sys import path
 import os
 
 from config.webserver_config import settings as cherrypy_config
-from config.primary_config import settings as app_config
+from config.app_config import settings as app_config
 
 class MVC( object ):
 
