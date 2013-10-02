@@ -18,7 +18,7 @@ class DriverRenderer( object ):
   def __init__( self ):
     self.layout_h = ''
     self.layout_f = ''
-    self.env = env = Environment( loader=FileSystemLoader( MVC.app_dir + 'views') )
+    self.env = Environment( loader=FileSystemLoader( MVC.app_dir + 'views') )
 
   def make( self, view, data = None, header = None, footer = None ):
     html_source = ''
