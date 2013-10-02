@@ -12,11 +12,6 @@ MVC = MVC()
 from sys import path
 import cherrypy
 
-path.insert( 1, 'config')
-from webserver_config import settings
-
-
-
 Renderer          = MVC.loadDriver('Renderer')
 Renderer.layout_h = 'admin/layout/header.html'
 Renderer.layout_f = 'admin/layout/footer.html'
@@ -31,7 +26,13 @@ class Root:
     return Renderer.make( 'errors/404.html', header = False )
   cherrypy.config.update({'error_page.404': error_page_404})
 
-  
+  def auth( user_name, password ):
+    sql = 'SELECT * FROM %s.users WHERE `user` = "%s" AND `pass` = MD5( "%s" )' % ( user_name, password )
+    auth = Mysql.ex( sql )
+    if auth:
+      return self.getById( auth[0] )
+    else:
+      return False
 
 root            = Root()
 
