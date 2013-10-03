@@ -27,6 +27,7 @@ class ModelUser( object ):
     the_user = {
       'id'         : user[0][0],
       'user'       : user[0][1],
+      'email'      : user[0][2],
       'last_login' : user[0][4],
       'meta'       : self.getUserMeta( user[0][0] )
     }
@@ -48,6 +49,26 @@ class ModelUser( object ):
     Mysql.insert( 'users', data )
     return self.getByName( user_name )
 
+  def update( self, user_id, user_name, email ):
+    data = {
+      'user' : user_name,
+      'email': email
+    }
+    where = { 'id' : user_id }
+    Mysql.update( 'users', data, where )
+
+  def updatePass( self, user_id, password ):
+    data  = { 'pass' : password }
+    where = { 'id'   : user_id }
+    Mysql.update( 'users', data, where )
+
+  def delete( self, user_id ):
+    sql = 'DELETE FROM `%s`.`users` WHERE `id` = "%s";' % ( self.db_name, user_id )
+    Mysql.ex( sql )
+    sql_meta = 'DELETE FROM `%s`.`usermeta` WHERE `user_id` = "%s";' % ( self.db_name, user_id )
+    Mysql.ex( sql_meta )
+    return True
+
   def getUsersWithMeta( self, meta_key ):
     sql = 'SELECT * FROM %s.usermeta WHERE `meta_key` = "%s";' % ( self.db_name, meta_key  )
     meta_records = Mysql.ex( sql )
@@ -57,11 +78,11 @@ class ModelUser( object ):
     return users
 
   def getUserMeta( self, user_id ):
-    sql = 'SELECT * FROM `%s`.`usermeta` WHERE `user_id` = "%s" LIMIT 1;' % ( MVC.db['name'], user_id )
+    sql = 'SELECT * FROM `%s`.`usermeta` WHERE `user_id` = "%s"' % ( MVC.db['name'], user_id )
     user_meta = Mysql.ex( sql )
     meta_dict = {}
     for meta in user_meta:
-      meta_dict[ meta[3] ]= meta[4]
+      meta_dict[ meta[3] ]= { 'id': meta[0], 'value': meta[4] }
     return meta_dict
 
   def addMeta( self, user_id, meta_key, meta_value, pretty_name, help_text, parent  ):
@@ -75,14 +96,23 @@ class ModelUser( object ):
     }
     Mysql.insert( 'usermeta', data )
 
-  def updateUserMeta( self, user_id, meta_key, meta_value ):
-    data = {
-      'meta_value' : meta_value,
-    }
-    where = {
-      'user_id'  : user_id,
-      'meta_key' : meta_key
-    }
+  def updateUserMeta( self, user_id, meta_key, meta_value, meta_id = None ):
+    if meta_id:
+      data = {
+        'meta_key'  : meta_key,
+        'meta_value': meta_value
+      }
+      where = {
+        'id' : meta_id
+      }
+    else:
+      data = {
+        'meta_value' : meta_value,
+      }
+      where = {
+        'user_id'  : user_id,
+        'meta_key' : meta_key
+      }
     Mysql.update( 'usermeta', data, where )
 
 # End File: models/ModelUser.py

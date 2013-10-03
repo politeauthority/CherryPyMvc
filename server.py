@@ -42,6 +42,9 @@ class Admin( object ):
     data = {}
     if user_id != False:
       data['user'] = User.getById( user_id)
+      print ''
+      print ''
+      print ''
       print user_id
       print data
       view = env.get_template('base/admin/users/info.html')
@@ -62,6 +65,44 @@ class Admin( object ):
         new_user = User.create( kwargs['user_name'], kwargs['email'], kwargs['password_1'] )
         return new_user
   create_user_submit.exposed = True
+
+  def edit_user( self, **kwargs ):
+    if kwargs:
+      User = MVC.loadModel('User')
+      User.update( kwargs['user_id'], kwargs['user_name'], kwargs['email'] )
+    return 'need redirect'
+  edit_user.exposed = True
+
+  def edit_password( self, **kwargs ):
+    if kwargs:
+      User = MVC.loadModel('User')
+      if kwargs['password_1'] == kwargs['password_2']:
+        User.updatePass( kwargs['user_id'], kwargs['password_1'] )
+    return 'needs redirect'
+  edit_password.exposed = True
+
+  def delete_user( self, user_id = None ):
+    if user_id:
+      User = MVC.loadModel('User')
+      User.delete( user_id )
+      return 'deleted'
+  delete_user.exposed = True
+
+  def create_user_meta( self, **kwargs ):
+    if kwargs:
+      User = MVC.loadModel('User')
+      help_text = ''
+      parent    = ''
+      User.addMeta( kwargs['user_id'], kwargs['meta_key'], kwargs['meta_value'], kwargs['pretty_name'], help_text, parent )
+      return 'success'
+  create_user_meta.exposed = True
+
+  def edit_user_meta( self, **kwargs ):
+    if kwargs:
+      User = MVC.loadModel('User')
+      User.updateUserMeta( kwargs['user_id'], kwargs['meta_key'], kwargs['meta_value'], meta_id = kwargs['meta_id'] )
+      return 'success'
+  edit_user_meta.exposed = True
 
   def roles( self ):
     ACL = MVC.loadHelper('ACL')
