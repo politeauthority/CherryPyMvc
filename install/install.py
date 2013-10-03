@@ -13,7 +13,7 @@ import subprocess
 #install our python dependancies
 subprocess.call( "apt-get install python-cherrypy3", shell=True )
 subprocess.call( "apt-get install python-jinja2",   shell=True )
-
+subprocess.call( "apt-get install python-bs4",   shell=True )
 Mysql = MVC.loadDriver('Mysql')
 Mysql.ex( 'CREATE DATABASE IF NOT EXISTS `%s`;' % MVC.db['name'] )
 

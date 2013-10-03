@@ -32,10 +32,18 @@ class DriverRenderer( object ):
       if header != False:
         html_source = html_source + self.draw( self.layout_f, footer )
 
+    html_source = self.order_content( html_source )
+
     return html_source
       
   def draw( self, view, data = None ):
     view = self.env.get_template( view )
     return view.render( d = data )
-    
+  
+  def order_content( self, source ):
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup( source )
+    print soup
+    print soup.title
+
 # End File: driver/DriverRenderer.py

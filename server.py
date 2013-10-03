@@ -34,6 +34,6 @@ class Root( object ):
     return Renderer.make( 'errors/404.html', header = False )
   cherrypy.config.update({'error_page.404': error_page_404})  
 
-cherrypy.quickstart(  Root(),  config = MVC.cherrypy_config )
+cherrypy.quickstart( Root(),  config = MVC.cherrypy_config )
 
 # End File: server.py
