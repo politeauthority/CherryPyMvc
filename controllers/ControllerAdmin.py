@@ -9,6 +9,8 @@ from MVC import MVC
 MVC = MVC()
 # End file header
 
+import cherrypy
+
 class ControllerAdmin( object ):
 
   def __init__( self ):
@@ -16,7 +18,10 @@ class ControllerAdmin( object ):
     self.Renderer.layout_h = 'admin/layout/header.html'
     self.Renderer.layout_f = 'admin/layout/footer.html'
 
-  def index( self ):
+  def index( self, **kwargs ):
+    if kwargs:
+      print 'try to log in the use'
+      return ''
     return self.Renderer.make( 'admin/login.html', header = False )
   index.exposed = True
 
@@ -51,7 +56,7 @@ class ControllerAdmin( object ):
       if kwargs['password_1'] == kwargs['password_2']:
         User = MVC.loadModel('User')
         new_user = User.create( kwargs['user_name'], kwargs['email'], kwargs['password_1'] )
-        return new_user
+        cherrypy.HTTPRedirect('/admin/users/', 302)
   create_user_submit.exposed = True
 
   def edit_user( self, **kwargs ):

@@ -22,12 +22,8 @@ class Root( object ):
     #self.Renderer.layout_f = 'admin/layout/footer.html'
 
   def index( self ):
-    return self.Renderer.make('base/index.html')
+    return self.Renderer.make('index.html')
   index.exposed = True
-
-  def dashboard( self ):
-    return self.Renderer.make( 'base/admin/dashboard.html' )
-  dashboard.exposed = True
 
   def error_page_404( status, message, traceback, version ):
     Renderer = MVC.loadDriver('Renderer')

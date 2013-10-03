@@ -33,9 +33,9 @@ class DriverRenderer( object ):
         html_source = html_source + self.draw( self.layout_f, footer )
 
     html_source = self.order_content( html_source )
-
+    #print html_source
     return html_source
-      
+  
   def draw( self, view, data = None ):
     view = self.env.get_template( view )
     return view.render( d = data )
@@ -43,7 +43,8 @@ class DriverRenderer( object ):
   def order_content( self, source ):
     from bs4 import BeautifulSoup
     soup = BeautifulSoup( source )
-    print soup
-    print soup.title
+    html_content = soup.prettify()
+    source = html_content
+    return source
 
 # End File: driver/DriverRenderer.py
