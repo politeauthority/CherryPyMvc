@@ -19,11 +19,15 @@ class ControllerAdmin( object ):
     self.Renderer.layout_f = 'admin/layout/footer.html'
 
   def index( self, **kwargs ):
-    if kwargs:
-      print 'try to log in the use'
-      return ''
     return self.Renderer.make( 'admin/login.html', header = False )
   index.exposed = True
+
+  def auth( self, **kwargs ):
+    if kwargs:
+      print ''
+    else:
+      print ''
+    return ''
 
   def dashboard( self ):
     return self.Renderer.make('admin/dashboard.html')    
