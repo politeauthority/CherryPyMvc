@@ -17,14 +17,18 @@ env = Environment( loader=FileSystemLoader('views') )
 
 class Admin( object ):
 
+  def __init__( self ):
+    self.Renderer          = MVC.loadDriver('Renderer')
+    #self.Renderer.layout_h = 'admin/layout/header.html'
+    #self.Renderer.layout_f = 'admin/layout/footer.html'
+
   def index( self ):
     view = env.get_template('base/admin/login.html')
     return view.render( d = {} )
   index.exposed = True
 
   def dashboard( self ):
-    view = env.get_template('base/admin/dashboard.html')
-    return view.render( d = {} )
+    return self.Renderer.make('base/admin/dashboard.html')    
   dashboard.exposed = True
 
   def users( self ):
@@ -32,9 +36,7 @@ class Admin( object ):
     data = {
       'users' : User.getAll()
     }
-    print data
-    view = env.get_template('base/admin/users/index.html')
-    return view.render( d = data )
+    return self.Renderer.make( 'base/admin/users/index.html', data )
   users.exposed = True
 
   def info( self, user_id = False ):
@@ -42,20 +44,13 @@ class Admin( object ):
     data = {}
     if user_id != False:
       data['user'] = User.getById( user_id)
-      print ''
-      print ''
-      print ''
-      print user_id
-      print data
-      view = env.get_template('base/admin/users/info.html')
-      return view.render( d = data )
+      return self.Renderer.make( 'base/admin/users/info.html', data )
     else:
       return 'error'
   info.exposed = True
 
   def create( self ):
-    view = env.get_template('base/admin/users/create.html')
-    return view.render( d = {} )
+    return self.Renderer.make( 'base/admin/users/create.html' )
   create.exposed = True
 
   def create_user_submit( self, **kwargs ):
@@ -108,28 +103,35 @@ class Admin( object ):
     ACL = MVC.loadHelper('ACL')
     roles = ACL.getAllRoles()
     data = { 'roles': roles }
-    view = env.get_template('base/admin/users/roles.html')    
-    return view.render( d = data )
+    return self.Renderer.make( 'base/admin/users/roles.html', data )
   roles.exposed = True
     
   def settings( self ):
-    view = env.get_template('base/admin/settings/index.html')
-    return view.render( d = {} )
+    return self.Renderer.make( 'base/admin/settings/index.html' )
   settings.exposed = True
 
 class Root( object ):
   
   admin = Admin()
 
+  def __init__( self ):  
+    self.Renderer          = MVC.loadDriver('Renderer')
+    #self.Renderer.layout_h = 'admin/layout/header.html'
+    #self.Renderer.layout_f = 'admin/layout/footer.html'
+
   def index( self ):
-    view = env.get_template('base/index.html')
-    return view.render( d = {} )
+    return self.Renderer.make('base/index.html')
   index.exposed = True
 
   def dashboard( self ):
-    view = env.get_template('base/admin/dashboard.html')
-    return view.render( d = {} )
+    return self.Renderer.make( 'base/admin/dashboard.html' )
+
   dashboard.exposed = True
+
+  def error_page_404( status, message, traceback, version ):
+    Renderer = MVC.loadDriver('Renderer')
+    return Renderer.make( 'errors/404.html', header = False )
+  cherrypy.config.update({'error_page.404': error_page_404})  
 
 cherrypy.quickstart(  Root(),  config = MVC.cherrypy_config )
 

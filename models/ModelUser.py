@@ -37,6 +37,14 @@ class ModelUser( object ):
     sql = 'SELECT * FROM `%s`.`users`;' % self.db_name
     users = Mysql.ex( sql )
     return users
+
+  def auth( user_name, password ):
+    sql = 'SELECT * FROM %s.users WHERE `user` = "%s" AND `pass` = MD5( "%s" )' % ( user_name, password )
+    auth = Mysql.ex( sql )
+    if auth:
+      return self.getById( auth[0] )
+    else:
+      return False
   
   def create( self, user_name, email, password ):
     data = {
