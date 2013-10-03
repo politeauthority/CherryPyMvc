@@ -3,9 +3,9 @@
 settings = { 
     'database': {
         'host'       : "localhost",
-        'user'       : "",
-        'pass'       : "",
-        'name'       : "New App",
+        'user'       : "root",
+        'pass'       : "cleancut",
+        'name'       : "framework_1",
     }
 }
 
