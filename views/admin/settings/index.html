@@ -1,4 +1,33 @@
-
+<_b>
+<!-- Modal -->
+<!-- Modal :: Add Setting -->
+<form action="/admin/update_setting" method="POST">    
+  <div id="modal_addSetting" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="myModalLabel">Add Setting</h3>
+    </div>
+    <div class="modal-body">
+      <table class="table table-striped">
+        <tr>
+          <td>Setting Name</td>
+          <td><input name="user_name" type="input" class="input" value=""></td>
+        </tr>
+        <tr>
+          <td>Value</td>
+          <td><input name="email" type="input" class="input" value=""></td>
+        </tr>
+      </table>
+      <input name="setting_id" type="hidden" value="">
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+      <button class="btn btn-primary">Save changes</button>
+    </div>
+  </div>
+</form>
+<!-- End Modal -->
+</_b>
 
 <div class="container-fluid main_box">
   <div class="row-fluid">
@@ -11,9 +40,20 @@
 
     <div class="span8 container-fluid">
       <div class="row-fluid">
-        <div class="span12">
+        <div class="span8">
           Settings
         </div>
+        <div class="span4">
+          <div class="btn-group">
+            <a class="btn btn-primary pull-right dropdown-toggle" data-toggle="dropdown" href="#">
+              Options
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="#modal_addSetting" role="button" data-toggle="modal">Add Setting</a></li>              
+            </ul>
+          </div>             
+        </div>        
       </div>
       <div class="row-fluid">
         <div class="span12">

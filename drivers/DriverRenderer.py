@@ -45,9 +45,8 @@ class DriverRenderer( object ):
     import re
     source = BeautifulSoup( source )
 
-
-    original_body_content = ''
     built_header = ''
+    built_body   = ''
 
     if source._h:
       original_move_content   = str( source._h )
@@ -61,16 +60,21 @@ class DriverRenderer( object ):
         built_body = original_body_content.replace( original_move_content, '' )
       else:
         built_body = original_body_content
+    else:
+      built_header = str( source.head )
+      built_body   = str( source.body )
 
-      source = BeautifulSoup( built_header + built_body )
-      
     if source._b:
       original_move_content = str( source._b )
       move_content          = original_move_content.replace('<_b>', '').replace('</_b>', '')
-      if original_body_content == '':
-        orignal_body_content = str( source.body )
-        
-      built_body = original_body_content[6:].replace( original_move_content, '') + move_content
+
+
+      built_body = built_body.replace( original_move_content, '' )        
+      print ''
+      print ''
+      print ''
+      print built_body
+      built_body = "<body>" + move_content + built_body[6:]
 
       if built_header != '':
         source = built_header + built_body
@@ -78,17 +82,7 @@ class DriverRenderer( object ):
         source = str( source.head ) + built_body 
 
       source = BeautifulSoup( source )
-      #print original_move_content
-        
-    print ''
-    print ''
-    print ''
-    print source
-    #print soup.title
-    #print soup
-    #print soup.head
-    
-    #print html_content.script
+
     return source.prettify()
 
 # End File: driver/DriverRenderer.py
