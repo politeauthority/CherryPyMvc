@@ -28,6 +28,7 @@ class ControllerAdmin( object ):
     else:
       print ''
     return ''
+  auth.exposed = True
 
   def dashboard( self ):
     return self.Renderer.make('admin/dashboard.html')    
@@ -60,14 +61,14 @@ class ControllerAdmin( object ):
       if kwargs['password_1'] == kwargs['password_2']:
         User = MVC.loadModel('User')
         new_user = User.create( kwargs['user_name'], kwargs['email'], kwargs['password_1'] )
-        cherrypy.HTTPRedirect('/admin/users/', 302)
+        raise cherrypy.HTTPRedirect('/admin/users/') 
   create_user_submit.exposed = True
 
   def edit_user( self, **kwargs ):
     if kwargs:
       User = MVC.loadModel('User')
       User.update( kwargs['user_id'], kwargs['user_name'], kwargs['email'] )
-    return 'need redirect'
+      raise cherrypy.HTTPRedirect( '/admin/info/%s' % kwargs['user_id'] )
   edit_user.exposed = True
 
   def edit_password( self, **kwargs ):
@@ -75,14 +76,14 @@ class ControllerAdmin( object ):
       User = MVC.loadModel('User')
       if kwargs['password_1'] == kwargs['password_2']:
         User.updatePass( kwargs['user_id'], kwargs['password_1'] )
-    return 'needs redirect'
+    raise cherrypy.HTTPRedirect( '/admin/info/%s' % kwargs['user_id'] )
   edit_password.exposed = True
 
   def delete_user( self, user_id = None ):
     if user_id:
       User = MVC.loadModel('User')
       User.delete( user_id )
-      return 'deleted'
+      raise cherrypy.HTTPRedirect( '/admin/info/%s' % user_id )
   delete_user.exposed = True
 
   def create_user_meta( self, **kwargs ):
@@ -91,14 +92,14 @@ class ControllerAdmin( object ):
       help_text = ''
       parent    = ''
       User.addMeta( kwargs['user_id'], kwargs['meta_key'], kwargs['meta_value'], kwargs['pretty_name'], help_text, parent )
-      return 'success'
+      raise cherrypy.HTTPRedirect( '/admin/info/%s' % kwargs['user_id'] )
   create_user_meta.exposed = True
 
   def edit_user_meta( self, **kwargs ):
     if kwargs:
       User = MVC.loadModel('User')
       User.updateUserMeta( kwargs['user_id'], kwargs['meta_key'], kwargs['meta_value'], meta_id = kwargs['meta_id'] )
-      return 'success'
+    raise cherrypy.HTTPRedirect( '/admin/info/%s' % kwargs['user_id'] )
   edit_user_meta.exposed = True
 
   def roles( self ):
@@ -112,4 +113,11 @@ class ControllerAdmin( object ):
     return self.Renderer.make( 'admin/settings/index.html' )
   settings.exposed = True
 
+  def settings_update( self, **kwargs ):
+    Settings = MVC.loadHelper( 'Settings')
+    if kwargs['setting_id'] == '':
+      Settings.update(  kwargs['meta_key'], kwargs['meta_value'] )
+    else:
+      Settings.create( kwargs['meta_key'], kwargs['meta_value'] )
+    raise cherrypy.HTTPRedirect( '/admin/settings' )
 # End File: controllers/ControllerAdmin.py
