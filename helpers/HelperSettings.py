@@ -18,28 +18,32 @@ Mysql = MVC.loadDriver('Mysql')
 class HelperSettings( object ):
 
   def __init__( self ):
+    self.db_name    =  MVC.db['name']
     self.table_name = 'options'
+
+  def create( self, meta_key, meta_value ):
+    sql = """INSERT INTO `%s`.`%s` ( `meta_key`, `meta_value` ) VALUES( "%s", "%s");""" % ( self.db_name, self.table_name, meta_key, meta_value )
+    Mysql.ex( sql )
 
   def update( self, meta_key, meta_value ):
     value_check = Mysql.ex( "SELECT * FROM %s.%s WHERE meta_key = '%s' " %
      ( MVC.db['name'], self.table_name, meta_key ) );
     if value_check:
-      sql = "UPDATE %s.%s SET meta_value = '%s' WHERE meta_key = '%s';" % ( MVC.db['name'], self.table_name, meta_value, meta_key ) 
+      sql = """UPDATE `%s`.`%s` SET meta_value = '%s' WHERE meta_key = '%s';""" % ( MVC.db['name'], self.table_name, meta_value, meta_key )
+      Mysql.ex( sql )
     else:
-      sql = "INSERT INTO %s.%s ( meta_key, meta_value ) VALUES ( '%s', '%s' );" % (  MVC.db['name'], self.table_name, meta_key, meta_value )
-    return Mysql.ex( sql )
+      self.create( meta_key, meta_value )
 
   def get_options( self ):
-    options = Mysql.ex( "SELECT * FROM %s.%s ORDER BY `meta_key`;" % ( MVC.db['name'], self.table_name ) )
+    options = Mysql.ex( """SELECT * FROM `%s`.`%s` ORDER BY `meta_key`;""" % ( MVC.db['name'], self.table_name ) )
     return options
   
   def get_option( self, meta_key, bool = False ):
-    options = Mysql.ex( "SELECT * FROM %s.%s WHERE meta_key = '%s';" % ( MVC.db['name'], self.table_name, meta_key ) )
+    options = Mysql.ex( """SELECT * FROM `%s`.`%s` WHERE meta_key = '%s';""" % ( MVC.db['name'], self.table_name, meta_key ) )
     try:
       options[0]
     except Exception:
       print Exception
-
     if bool:
       if options[0] == '1':
         return True

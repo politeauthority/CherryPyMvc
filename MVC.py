@@ -29,18 +29,18 @@ class MVC( object ):
     #self.cherrypy_config['/']['tools.staticdir.root']  = '%spublic_html' % self.app_dir
 
   def loadDriver( self, driver_name ):
-    return self.load( 'Driver', driver_name )
+    return self.__load( 'Driver', driver_name )
 
   def loadController( self, controller_name ):
-    return self.load( 'Controller', controller_name )
+    return self.__load( 'Controller', controller_name )
 
   def loadModel( self, model_name ):
-    return self.load( 'Model', model_name )
+    return self.__load( 'Model', model_name )
 
   def loadHelper( self, helper_name ):
-    return self.load( 'Helper', helper_name )
+    return self.__load( 'Helper', helper_name )
 
-  def load( self, type, name ):
+  def __load( self, type, name ):
     path.insert( 1, self.app_dir + type.lower() + 's')
     item_name = type + name
     __import__( item_name )

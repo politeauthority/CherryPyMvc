@@ -16,6 +16,7 @@ from jinja2 import Environment, FileSystemLoader
 class DriverRenderer( object ):
 
   def __init__( self ):
+    self.parse_html = True
     self.layout_h = ''
     self.layout_f = ''
     self.env = Environment( loader=FileSystemLoader( MVC.app_dir + 'views') )
@@ -41,48 +42,42 @@ class DriverRenderer( object ):
     return view.render( d = data )
   
   def __parse_html( self, source ):
-    from bs4 import BeautifulSoup
-    import re
-    source = BeautifulSoup( source )
-
-    built_header = ''
-    built_body   = ''
-
-    if source._h:
-      original_move_content   = str( source._h )
-      original_header_content = str( source.head )
-      original_body_content   = str( source.body )
-
-      header_content = original_move_content.replace('<_h>', '' ).replace('</_h>', '')
-      built_header = original_header_content[:-7] + "\n<!-- Auto moved -->\n" + header_content + "\n<!-- / Auto moved --></head>"
-
-      if original_move_content in original_body_content:
-        built_body = original_body_content.replace( original_move_content, '' )
-      else:
-        built_body = original_body_content
-    else:
-      built_header = str( source.head )
-      built_body   = str( source.body )
-
-    if source._b:
-      original_move_content = str( source._b )
-      move_content          = original_move_content.replace('<_b>', '').replace('</_b>', '')
-
-
-      built_body = built_body.replace( original_move_content, '' )        
-      print ''
-      print ''
-      print ''
-      print built_body
-      built_body = "<body>" + move_content + built_body[6:]
-
-      if built_header != '':
-        source = built_header + built_body
-      else:
-        source = str( source.head ) + built_body 
-
+    if self.parse_html:
+      from bs4 import BeautifulSoup
+      import re
       source = BeautifulSoup( source )
 
-    return source.prettify()
+      built_header = ''
+      built_body   = ''
+
+      if source._h:
+        original_move_content   = str( source._h )
+        original_header_content = str( source.head )
+        original_body_content   = str( source.body )
+
+        header_content = original_move_content.replace('<_h>', '' ).replace('</_h>', '')
+        built_header = original_header_content[:-7] + "\n<!-- Auto moved -->\n" + header_content + "\n<!-- / Auto moved --></head>"
+
+        if original_move_content in original_body_content:
+          built_body = original_body_content.replace( original_move_content, '' )
+        else:
+          built_body = original_body_content
+      else:
+        built_header = str( source.head )
+        built_body   = str( source.body )
+
+      if source._b:
+        original_move_content = str( source._b )
+        move_content          = original_move_content.replace('<_b>', '').replace('</_b>', '')
+        built_body = built_body.replace( original_move_content, '' )      
+        built_body = "<body>" + move_content + built_body[6:]
+        if built_header != '':
+          source = built_header + built_body
+        else:
+          source = str( source.head ) + built_body 
+        source = BeautifulSoup( source )
+      return source.prettify()
+    else:
+      return source
 
 # End File: driver/DriverRenderer.py

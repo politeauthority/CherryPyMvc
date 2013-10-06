@@ -10,6 +10,7 @@ sys.path.append( os.path.join(os.path.dirname(__file__), '..', '') )
 from MVC import MVC
 MVC = MVC()
 # End file header
+
 import MySQLdb as mdb
 
 class DriverMysql( object ):
@@ -37,7 +38,8 @@ class DriverMysql( object ):
     for value in values:
         value_sql = value_sql + '"%s",' % self.escape_string( value )
     value_sql = value_sql.rstrip( value_sql[-1:])
-    sql = "INSERT INTO %s.%s (%s) VALUES(%s)" % ( self.dbname, table, column_sql, value_sql )
+
+    sql = """INSERT INTO `%s`.`%s` (%s) VALUES(%s);""" % ( self.dbname, table, column_sql, value_sql )
     self.ex( sql )
 
   def update( self, table, items, where, limit = 1 ):
@@ -50,7 +52,7 @@ class DriverMysql( object ):
       where_sql = where_sql + '`%s`="%s" AND ' % ( column, value )
     where_sql = where_sql.rstrip( where_sql[-4:] )
 
-    sql = "UPDATE %s.%s SET %s WHERE %s LIMIT %s" % ( self.dbname, table, set_sql, where_sql, limit )
+    sql = """UPDATE %s.%s SET %s WHERE %s LIMIT %s;""" % ( self.dbname, table, set_sql, where_sql, limit )
     self.ex( sql )
 
   def escape_string( self, string ):
