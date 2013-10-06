@@ -1,148 +1,148 @@
 <_h>
-<script type="text/javascript">
-  $(document).ready( function(){
-    $('.edit_meta_btn').click( function(event){
-      var btn = $(this),
-          row = btn.closest('tr');
-      $('#edit_meta_key').val( row.find('td')[0].outerText )
-      $('#edit_meta_value').val( row.find('td')[1].outerText )
-      $('#edit_meta_id').val( btn.attr('value') )
+  <script type="text/javascript">
+    $(document).ready( function(){
+      $('.edit_meta_btn').click( function(event){
+        var btn = $(this),
+            row = btn.closest('tr');
+        $('#edit_meta_key').val( row.find('td')[0].outerText )
+        $('#edit_meta_value').val( row.find('td')[1].outerText )
+        $('#edit_meta_id').val( btn.attr('value') )
+      });
     });
-  });
-</script>
+  </script>
 </_h>
 <_b>
-<!-- Modal -->
-<!-- Modal :: Edit User -->
-<form action="/admin/edit_user" method="POST">    
-  <div id="modal_editUser" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Modal -->
+  <!-- Modal :: Edit User -->
+  <form action="/admin/edit_user" method="POST">    
+    <div id="modal_editUser" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Edit User</h3>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <tr>
+            <td>User Name</td>
+            <td><input name="user_name" type="input" class="input" value="{{d['user']['user']}}"></td>
+          </tr>
+          <tr>
+            <td>Email</td>
+            <td><input name="email" type="input" class="input" value="{{d['user']['email']}}"></td>
+          </tr>
+        </table>
+        <input name="user_id" type="hidden" value="{{d['user']['id']}}">
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Modal :: Change Password -->
+  <form action="/admin/edit_password" method="POST">    
+    <div id="modal_changePassword" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Change Password</h3>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <tr>
+            <td>New Password</td>
+            <td><input name="password_1" type="password" class="input"></td>
+          </tr>
+          <tr>
+            <td>Confirm</td>
+            <td><input name="password_2" type="password" class="input"></td>
+          </tr>
+        </table>
+        <input name="user_id" type="hidden" value="{{d['user']['id']}}">
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Modal :: Add User Meta -->
+  <form action="/admin/create_user_meta" method="POST">   
+    <div id="modal_addMeta" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Add User Meta</h3>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <tr>
+            <td>Meta Key</td>
+            <td><input name="meta_key" type="input" class="input" class="input"></td>
+          </tr>
+          <tr>
+            <td>Meta Value</td>
+            <td><textarea name="meta_value" type="input" class="input"></textarea></td>
+          </tr>      
+        </table>
+        <input name="pretty_name" type="hidden" value="">          
+        <input name="user_id" type="hidden" value="{{d['user']['id']}}">
+        
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn btn-primary">Save Changes</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Modal :: Edit User Meta -->
+  <form action="/admin/edit_user_meta" method="POST">   
+    <div id="modal_editMeta" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Edit User Meta</h3>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <tr>
+            <td>Meta Key</td>
+            <td><input id="edit_meta_key" name="meta_key" type="input" class="input" class="input"></td>
+          </tr>
+          <tr>
+            <td>Meta Value</td>
+            <td><textarea id="edit_meta_value" name="meta_value" type="input" class="input"></textarea></td>
+          </tr>     
+        </table>
+        <input name="pretty_name" type="hidden" class="input">          
+        <input name="user_id" type="hidden" value="{{d['user']['id']}}">
+        <input id="edit_meta_id" name="meta_id" type="hidden">
+        
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn btn-primary">Save Changes</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Modal :: Delete User -->
+  <div id="modal_deleteUser" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-      <h3 id="myModalLabel">Edit User</h3>
+      <h3 id="myModalLabel">Delete User</h3>
     </div>
     <div class="modal-body">
-      <table class="table table-striped">
-        <tr>
-          <td>User Name</td>
-          <td><input name="user_name" type="input" class="input" value="{{d['user']['user']}}"></td>
-        </tr>
-        <tr>
-          <td>Email</td>
-          <td><input name="email" type="input" class="input" value="{{d['user']['email']}}"></td>
-        </tr>
-      </table>
-      <input name="user_id" type="hidden" value="{{d['user']['id']}}">
+      Are you sure you want to delete user {{d['user']['user']}}?
     </div>
     <div class="modal-footer">
       <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-      <button class="btn btn-primary">Save changes</button>
+      <a href="/admin/delete_user/{{d['user']['id']}}">
+        <button class="btn btn-danger">Delete</button>
+      </a>
     </div>
   </div>
-</form>
-
-<!-- Modal :: Change Password -->
-<form action="/admin/edit_password" method="POST">    
-  <div id="modal_changePassword" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-      <h3 id="myModalLabel">Change Password</h3>
-    </div>
-    <div class="modal-body">
-      <table class="table table-striped">
-        <tr>
-          <td>New Password</td>
-          <td><input name="password_1" type="password" class="input"></td>
-        </tr>
-        <tr>
-          <td>Confirm</td>
-          <td><input name="password_2" type="password" class="input"></td>
-        </tr>
-      </table>
-      <input name="user_id" type="hidden" value="{{d['user']['id']}}">
-    </div>
-    <div class="modal-footer">
-      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-      <button class="btn btn-primary">Save changes</button>
-    </div>
-  </div>
-</form>
-
-<!-- Modal :: Add User Meta -->
-<form action="/admin/create_user_meta" method="POST">   
-  <div id="modal_addMeta" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-      <h3 id="myModalLabel">Add User Meta</h3>
-    </div>
-    <div class="modal-body">
-      <table class="table table-striped">
-        <tr>
-          <td>Meta Key</td>
-          <td><input name="meta_key" type="input" class="input" class="input"></td>
-        </tr>
-        <tr>
-          <td>Meta Value</td>
-          <td><textarea name="meta_value" type="input" class="input"></textarea></td>
-        </tr>      
-      </table>
-      <input name="pretty_name" type="hidden" value="">          
-      <input name="user_id" type="hidden" value="{{d['user']['id']}}">
-      
-    </div>
-    <div class="modal-footer">
-      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-      <button class="btn btn-primary">Save Changes</button>
-    </div>
-  </div>
-</form>
-
-<!-- Modal :: Edit User Meta -->
-<form action="/admin/edit_user_meta" method="POST">   
-  <div id="modal_editMeta" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-      <h3 id="myModalLabel">Edit User Meta</h3>
-    </div>
-    <div class="modal-body">
-      <table class="table table-striped">
-        <tr>
-          <td>Meta Key</td>
-          <td><input id="edit_meta_key" name="meta_key" type="input" class="input" class="input"></td>
-        </tr>
-        <tr>
-          <td>Meta Value</td>
-          <td><textarea id="edit_meta_value" name="meta_value" type="input" class="input"></textarea></td>
-        </tr>     
-      </table>
-      <input name="pretty_name" type="hidden" class="input">          
-      <input name="user_id" type="hidden" value="{{d['user']['id']}}">
-      <input id="edit_meta_id" name="meta_id" type="hidden">
-      
-    </div>
-    <div class="modal-footer">
-      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-      <button class="btn btn-primary">Save Changes</button>
-    </div>
-  </div>
-</form>
-
-<!-- Modal :: Delete User -->
-<div id="modal_deleteUser" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="myModalLabel">Delete User</h3>
-  </div>
-  <div class="modal-body">
-    Are you sure you want to delete user {{d['user']['user']}}?
-  </div>
-  <div class="modal-footer">
-    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-    <a href="/admin/delete_user/{{d['user']['id']}}">
-      <button class="btn btn-danger">Delete</button>
-    </a>
-  </div>
-</div>
-<!-- End Modal -->
+  <!-- End Modal -->
 </_b>
 
 <div class="container-fluid main_box">

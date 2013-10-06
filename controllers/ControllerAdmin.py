@@ -110,14 +110,24 @@ class ControllerAdmin( object ):
   roles.exposed = True
     
   def settings( self ):
-    return self.Renderer.make( 'admin/settings/index.html' )
+    Settings = MVC.loadHelper('Settings')
+    data = { 'options' : Settings.get_options() }
+    return self.Renderer.make( 'admin/settings/index.html', data )
   settings.exposed = True
 
   def settings_update( self, **kwargs ):
     Settings = MVC.loadHelper( 'Settings')
-    if kwargs['setting_id'] == '':
-      Settings.update(  kwargs['meta_key'], kwargs['meta_value'] )
+    if kwargs['meta_id'] == '':
+      Settings.create(  kwargs['meta_key'], kwargs['meta_value'] )
     else:
-      Settings.create( kwargs['meta_key'], kwargs['meta_value'] )
+      Settings.update( kwargs['meta_key'], kwargs['meta_value'] )
     raise cherrypy.HTTPRedirect( '/admin/settings' )
+  settings_update.exposed = True
+
+  def settings_delete( self, meta_id ):
+    Settings = MVC.loadHelper( 'Settings')
+    Settings.delete( meta_id )
+    raise cherrypy.HTTPRedirect( '/admin/settings' )
+  settings_delete.exposed = True
+
 # End File: controllers/ControllerAdmin.py

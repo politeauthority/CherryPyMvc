@@ -26,7 +26,7 @@ class HelperSettings( object ):
     Mysql.ex( sql )
 
   def update( self, meta_key, meta_value ):
-    value_check = Mysql.ex( "SELECT * FROM %s.%s WHERE meta_key = '%s' " %
+    value_check = Mysql.ex( "SELECT * FROM %s.%s WHERE meta_key = '%s';" %
      ( MVC.db['name'], self.table_name, meta_key ) );
     if value_check:
       sql = """UPDATE `%s`.`%s` SET meta_value = '%s' WHERE meta_key = '%s';""" % ( MVC.db['name'], self.table_name, meta_value, meta_key )
@@ -34,12 +34,18 @@ class HelperSettings( object ):
     else:
       self.create( meta_key, meta_value )
 
+  def delete( self, meta_id ):
+    sql = """DELETE FROM `%s`.`%s` WHERE `id` = "%s";""" % ( self.db_name, self.table_name, meta_id)
+    print sql
+    print sql
+    Mysql.ex( sql )
+
   def get_options( self ):
     options = Mysql.ex( """SELECT * FROM `%s`.`%s` ORDER BY `meta_key`;""" % ( MVC.db['name'], self.table_name ) )
     return options
   
   def get_option( self, meta_key, bool = False ):
-    options = Mysql.ex( """SELECT * FROM `%s`.`%s` WHERE meta_key = '%s';""" % ( MVC.db['name'], self.table_name, meta_key ) )
+    options = Mysql.ex( """SELECT * FROM `%s`.`%s` WHERE `meta_key` = '%s';""" % ( MVC.db['name'], self.table_name, meta_key ) )
     try:
       options[0]
     except Exception:
