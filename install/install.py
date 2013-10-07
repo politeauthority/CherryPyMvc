@@ -56,6 +56,24 @@ createTable_user_acl_roles       = """CREATE TABLE `"""+ MVC.db['name'] +"""`.`a
   UNIQUE KEY `roleName` (`roleName`)                                                                                                                          
 ); """
 
+createTable_user_acl_permissions = """CREATE TABLE `"""+ MVC.db['name'] +"""`.`acl_permissions` (
+  `id`        bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `permKey`   varchar(30) NOT NULL,
+  `permName`  varchar(30) NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `permKey` (`permKey`)
+); """
+
+createTable_user_acl_role_perms  = """CREATE TABLE `"""+ MVC.db['name'] +"""`.`acl_role_perms` (
+  `id`      bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `roleID`  bigint(20) NOT NULL,
+  `permID`  bigint(20) NOT NULL,
+  `value`   tinyint(1) NOT NULL DEFAULT '0',
+  `addDate` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `roleID_2` (`roleID`,`permID`)
+); """
+
 createTable_user_acl_user_perms  = """CREATE TABLE `"""+ MVC.db['name'] +"""`.`acl_user_perms` (                                                              
   `id`              bigint(20) unsigned NOT NULL AUTO_INCREMENT,                                                                                      
   `userID`          bigint(20) NOT NULL,                                                                                                                      
@@ -78,6 +96,8 @@ Mysql.ex( createTable_options )
 Mysql.ex( createTable_users )
 Mysql.ex( createTable_usermeta )
 Mysql.ex( createTable_user_acl_roles )
+Mysql.ex( createTable_user_acl_permissions )
+Mysql.ex( createTable_user_acl_role_perms)
 Mysql.ex( createTable_user_acl_user_perms )
 Mysql.ex( createTable_user_acl_user_roles )
 

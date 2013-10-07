@@ -109,6 +109,25 @@ class ControllerAdmin( object ):
     return self.Renderer.make( 'admin/users/roles.html', data )
   roles.exposed = True
     
+  def acl_role_update( self, **kwargs ):
+    if kwargs:
+      ACL = MVC.loadHelper( 'ACL' )
+      if kwargs['role_id'] == '':
+        ACL.createRole( kwargs['role_name'] )
+    raise cherrypy.HTTPRedirect( '/admin/roles/' )
+  acl_role_update.exposed =  True
+
+  def acl_perm_update( self, **kwargs ):
+    if kwargs:
+      ACL = MVC.loadHelper( 'ACL' )
+      if kwargs['perm_id'] == '':
+        Misc = MVC.loadHelper( 'Misc' )
+        perm_id = ACL.createPerm( Misc.slug( kwargs['perm_name'] ), kwargs['perm_name'] )[0]
+        if kwargs['role_id'] != '':
+          ACL.createRolePerm( kwargs['role_id'], perm_id )
+      raise cherrypy.HTTPRedirect( '/admin/roles/' )
+  acl_perm_update.exposed =  True  
+
   def settings( self ):
     Settings = MVC.loadHelper('Settings')
     data = { 'options' : Settings.get_options() }
