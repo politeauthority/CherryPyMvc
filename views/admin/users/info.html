@@ -115,7 +115,12 @@
           <tr>
             <td>Meta Value</td>
             <td><textarea id="edit_meta_value" name="meta_value" type="input" class="input"></textarea></td>
-          </tr>     
+          </tr> 
+          <tr>
+            <td colspan="2">
+              <a href="/admin/settings_delete/"><button class="btn btn-danger">Delete</button></a>NEEDS JS FINISH
+            </td>
+          </tr>    
         </table>
         <input name="pretty_name" type="hidden" class="input">          
         <input name="user_id" type="hidden" value="{{d['user']['id']}}">
@@ -245,6 +250,7 @@
       </div>
 
       <div class="row-fluid">
+
         <div class="span6">
           <h4>Meta</h4>
           {% if d['user']['meta'] %}
@@ -279,9 +285,9 @@
         <div class="span6">
           <h4>Permissions</h4>
           <a href="#modal_editPermission" role="button" data-toggle="modal">
+            {if }
             <button class="btn btn-primary">Add Permission</button>
           </a>
-
         </div>
 
       </div>

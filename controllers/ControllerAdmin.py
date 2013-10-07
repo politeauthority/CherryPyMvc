@@ -22,6 +22,7 @@ class ControllerAdmin( object ):
     return self.Renderer.make( 'admin/login.html', header = False )
   index.exposed = True
 
+  # @todo: make this work!
   def auth( self, **kwargs ):
     if kwargs:
       print ''
@@ -48,31 +49,18 @@ class ControllerAdmin( object ):
     data = {}
     if user_id != False:
       data['user']  = User.getById( user_id )
-
-      print ' '
-      print data['user']
-      print ' '
-      print ' '
-      print ' '
-      print data['user']['perms'].user_roles
-      print ' '
-      print ' '
-      print ''
-      print data['user']['perms'].perms
-      print ' '
-      print ' '
-      print ''      
-
       data['roles'] = ACL.getAllRoles()
       return self.Renderer.make( 'admin/users/info.html', data )
     else:
       return 'error'
   info.exposed = True
 
+  # should be absolved into self.users as a modal window
   def create( self ):
     return self.Renderer.make( 'admin/users/create.html' )
   create.exposed = True
 
+  #should be user_add
   def create_user_submit( self, **kwargs ):
     if kwargs:
       if kwargs['password_1'] == kwargs['password_2']:
@@ -81,6 +69,7 @@ class ControllerAdmin( object ):
         raise cherrypy.HTTPRedirect('/admin/users/') 
   create_user_submit.exposed = True
 
+  #should be user_edit
   def edit_user( self, **kwargs ):
     if kwargs:
       User = MVC.loadModel('User')
@@ -88,6 +77,7 @@ class ControllerAdmin( object ):
       raise cherrypy.HTTPRedirect( '/admin/info/%s' % kwargs['user_id'] )
   edit_user.exposed = True
 
+  # should be user_password_edit
   def edit_password( self, **kwargs ):
     if kwargs:
       User = MVC.loadModel('User')
@@ -96,6 +86,7 @@ class ControllerAdmin( object ):
     raise cherrypy.HTTPRedirect( '/admin/info/%s' % kwargs['user_id'] )
   edit_password.exposed = True
 
+  # should be user_perms_edit
   def user_edit_perms( self, **kwargs ):
     if kwargs:
       ACL = MVC.loadHelper( 'ACL' )
@@ -115,6 +106,7 @@ class ControllerAdmin( object ):
     raise cherrypy.HTTPRedirect( '/admin/info/%s' % kwargs['user_id'] )
   user_edit_perms.exposed = True
 
+  # should be user_delete
   def delete_user( self, user_id = None ):
     if user_id:
       User = MVC.loadModel('User')
@@ -122,6 +114,7 @@ class ControllerAdmin( object ):
       raise cherrypy.HTTPRedirect( '/admin/info/%s' % user_id )
   delete_user.exposed = True
 
+  # should be user_meta_create // OR combined with edit_user_meta
   def create_user_meta( self, **kwargs ):
     if kwargs:
       User = MVC.loadModel('User')
@@ -131,6 +124,7 @@ class ControllerAdmin( object ):
       raise cherrypy.HTTPRedirect( '/admin/info/%s' % kwargs['user_id'] )
   create_user_meta.exposed = True
 
+  #should be user_meta_edit
   def edit_user_meta( self, **kwargs ):
     if kwargs:
       User = MVC.loadModel('User')
@@ -138,6 +132,7 @@ class ControllerAdmin( object ):
     raise cherrypy.HTTPRedirect( '/admin/info/%s' % kwargs['user_id'] )
   edit_user_meta.exposed = True
 
+  # should be user_acl
   def roles( self ):
     ACL = MVC.loadHelper('ACL')
     roles = ACL.getAllRoles()
@@ -145,6 +140,7 @@ class ControllerAdmin( object ):
     return self.Renderer.make( 'admin/users/roles.html', data )
   roles.exposed = True
     
+  #should be user_acl_role_update
   def acl_role_update( self, **kwargs ):
     if kwargs:
       ACL = MVC.loadHelper( 'ACL' )
@@ -153,6 +149,7 @@ class ControllerAdmin( object ):
     raise cherrypy.HTTPRedirect( '/admin/roles/' )
   acl_role_update.exposed =  True
 
+  # should be user_acl_perm_update
   def acl_perm_update( self, **kwargs ):
     if kwargs:
       ACL = MVC.loadHelper( 'ACL' )
