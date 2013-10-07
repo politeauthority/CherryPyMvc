@@ -152,7 +152,7 @@ class ControllerAdmin( object ):
         perm_id = ACL.createPerm( Misc.slug( kwargs['perm_name'] ), kwargs['perm_name'] )[0]
         if kwargs['role_id'] != '':
           ACL.createRolePerm( kwargs['role_id'], perm_id )
-      raise cherrypy.HTTPRedirect( '/admin/roles/' )
+      raise cherrypy.HTTPRedirect( '/admin/user_acl/' )
   acl_perm_update.exposed =  True  
 
   def settings( self ):

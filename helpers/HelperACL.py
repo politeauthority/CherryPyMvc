@@ -59,7 +59,7 @@ class HelperACL( object ):
   def getUserRoles( self ):
     roles = []
     if self.user_id:
-      sql = "SELECT * FROM `%s`.`acl_user_roles` WHERE `userID` = '%s' ORDER BY `addDate` ASC;" % ( self.database, self.user_id )
+      sql = """SELECT * FROM `%s`.`acl_user_roles` WHERE `user_id` = '%s' ORDER BY `added` ASC;""" % ( self.database, self.user_id )
       results = Mysql.ex( sql )
       for role in results:
         roles.append( role[1] )
@@ -68,15 +68,15 @@ class HelperACL( object ):
   # Get the PERMISSIONS assigned to a ROLE
   # @param : role list or string
   def getRolePerms( self, roles ):
-    sql = 'SELECT * FROM `%s`.`acl_role_perms` WHERE `roleID` ' % self.database
+    sql = """SELECT * FROM `%s`.`acl_role_perms` WHERE `role_id` """ % self.database
     if isinstance( roles, types.ListType ):
       role_ids = ''
       for role in roles:
         role_ids += str( role ) + ','
       role_ids = role_ids[:-1]
-      sql += 'IN ( %s ) ORDER BY `ID` ASC;' % role_ids
+      sql += 'IN ( %s ) ORDER BY `id` ASC;' % role_ids
     else:
-      sql += 'IN ( %s ) ORDER BY `ID` ASC;' % roles 
+      sql += 'IN ( %s ) ORDER BY `id` ASC;' % roles 
 
     rolePerms = Mysql.ex( sql )
 
@@ -100,7 +100,7 @@ class HelperACL( object ):
     return perms
 
   def getUserPerms( self, user_id ):
-    sql = "SELECT * FROM `%s`.`acl_user_perms` WHERE `userID` = %s ORDER BY `addDate` ASC;" % ( self.database, user_id )
+    sql = """SELECT * FROM `%s`.`acl_user_perms` WHERE `user_id` = %s ORDER BY `added` ASC;""" % ( self.database, user_id )
     userPerms = Mysql.ex( sql )
 
     perms = []
@@ -124,53 +124,53 @@ class HelperACL( object ):
 
   # TODO: combine this with the getPermNameFromID 
   def getPermKeyByID( self, perm_id ):
-    sql = "SELECT `permKey` FROM `%s`.`acl_permissions` WHERE `ID` = %s;" % ( self.database, perm_id )
+    sql = """SELECT `perm_key` FROM `%s`.`acl_permissions` WHERE `id` = %s;""" % ( self.database, perm_id )
     permKeyID = Mysql.ex( sql )
     return permKeyID[0][0]
 
   def getPermByKey( self, key ):
-    sql = """SELECT * FROM `%s`.`acl_permissions` WHERE `permKey` = "%s";""" % ( self.database, key )
+    sql = """SELECT * FROM `%s`.`acl_permissions` WHERE `perm_key` = "%s";""" % ( self.database, key )
     permKeyID = Mysql.ex( sql )
     return permKeyID[0]
 
   # TODO: combine this with the getPermKeyByID 
   def getPermNameFromID( self, perm_id ):
-    sql = "SELECT `permName` FROM `%s`.`acl_permissions` WHERE `ID` = %s;" % ( self.database, perm_id )
+    sql = """SELECT `perm_name` FROM `%s`.`acl_permissions` WHERE `id` = %s;""" % ( self.database, perm_id )
     permKeyID = Mysql.ex( sql )
     return permKeyID[0][0]    
 
   def addUserRole( self, user_id, role_id ):
     Time = MVC.loadHelper('Time')    
-    sql = 'INSERT INTO `%s`.`acl_user_roles` ( `userID`, `roleID`, `addDate` ) VALUES ( "%s", "%s", "%s")' % ( self.database, user_id, role_id, Time.now() )
+    sql = """INSERT INTO `%s`.`acl_user_roles` ( `user_id`, `role_id`, `added` ) VALUES ( "%s", "%s", "%s");""" % ( self.database, user_id, role_id, Time.now() )
     Mysql.ex( sql )
 
   def createRole( self, role_name ):
-    sql = """INSERT INTO `%s`.`acl_roles` ( roleName ) VALUES ( "%s" );""" % ( self.database, role_name )
+    sql = """INSERT INTO `%s`.`acl_roles` ( role_name ) VALUES ( "%s" );""" % ( self.database, role_name )
     Mysql.ex( sql )
 
   def createPerm( self, perm_key, perm_name ):
-    sql_check = 'SELECT * FROM `%s`.`acl_permissions` WHERE `permKey` = "%s"' % ( self.database, perm_key )
+    sql_check = """SELECT * FROM `%s`.`acl_permissions` WHERE `perm_key` = "%s";""" % ( self.database, perm_key )
     perm_exists = Mysql.ex( sql_check )
     if len( perm_exists ) == 0:
-      sql = 'INSERT INTO `%s`.`acl_permissions` ( permKey, permName ) VALUES ( "%s", "%s" );' % ( self.database, perm_key, perm_name )
+      sql = """INSERT INTO `%s`.`acl_permissions` ( perm_key, perm_name ) VALUES ( "%s", "%s" );""" % ( self.database, perm_key, perm_name )
       Mysql.ex( sql )
     return self.getPermByKey( perm_key )
 
   def createRolePerm( self, role_id, perm_id ):
     from datetime import datetime
-    sql_check = 'SELECT * FROM `%s`.`acl_role_perms` WHERE `roleID` = "%s" AND `permID` = "%s";' % ( self.database, role_id, perm_id )
+    sql_check = """SELECT * FROM `%s`.`acl_role_perms` WHERE `role_id` = "%s" AND `perm_id` = "%s";""" % ( self.database, role_id, perm_id )
     role_perm_exists = Mysql.ex( sql_check )
     if len( role_perm_exists ) == 0:
-      insert_sql = 'INSERT INTO `%s`.`acl_role_perms` ( `roleID`, `permID`, `value`, `addDate` ) VALUES( "%s", "%s", "1", "%s");' % ( self.database, role_id, perm_id, datetime.now() )
+      insert_sql = """INSERT INTO `%s`.`acl_role_perms` ( `role_id`, `perm_id`, `value`, `added` ) VALUES( "%s", "%s", "1", "%s");""" % ( self.database, role_id, perm_id, datetime.now() )
       Mysql.ex( insert_sql )
     else:
-      update_sql = "UPDATE `%s`.`acl_role_perms` SET `value` = 1 WHERE ID = %s; " % ( self.database, role_perm_exists[0][0] )
+      update_sql = """UPDATE `%s`.`acl_role_perms` SET `value` = 1 WHERE `id` = %s; """ % ( self.database, role_perm_exists[0][0] )
       Mysql.ex( update_sql )
 
   ###### ADMIN MAINTAINENCE SECTION ######
 
   def updateUserRoles( self, user_id, role_ids ):
-    delete_sql = """DELETE FROM `%s`.`acl_user_roles` WHERE `userID` = "%s";""" % ( self.database, user_id )
+    delete_sql = """DELETE FROM `%s`.`acl_user_roles` WHERE `user_id` = "%s";""" % ( self.database, user_id )
     Mysql.ex( delete_sql )
     for role_id in role_ids:
       data = {
@@ -181,7 +181,7 @@ class HelperACL( object ):
       Mysql.insert( 'acl_user_roles', data )
 
   def updateUserPerms( self, user_id, perm_ids ):
-    delete_sql = """DELETE FROM `%s`.`acl_user_perms` WHERE `userID` = "%s";""" % ( self.database, user_id )
+    delete_sql = """DELETE FROM `%s`.`acl_user_perms` WHERE `user_id` = "%s";""" % ( self.database, user_id )
     Mysql.ex( delete_sql )
     for perm_id in perm_ids:
       perm_id

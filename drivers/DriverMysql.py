@@ -14,6 +14,7 @@ MVC = MVC()
 import MySQLdb as mdb
 
 class DriverMysql( object ):
+
   def __init__( self ):
     self.host     = MVC.db['host']
     self.dbname   = MVC.db['name']
@@ -52,10 +53,16 @@ class DriverMysql( object ):
       where_sql = where_sql + '`%s`="%s" AND ' % ( column, value )
     where_sql = where_sql.rstrip( where_sql[-4:] )
 
-    sql = """UPDATE %s.%s SET %s WHERE %s LIMIT %s;""" % ( self.dbname, table, set_sql, where_sql, limit )
+    sql = """UPDATE `%s`.`%s` SET %s WHERE %s LIMIT %s;""" % ( self.dbname, table, set_sql, where_sql, limit )
     self.ex( sql )
 
   def escape_string( self, string ):
     return mdb.escape_string( string )
+
+  def alt_con( self, host, dbname, dbuser, dbpass ):
+    self.host     = host
+    self.dbname   = dbname
+    self.user     = dbuser
+    self.password = dbpass
 
 # End File: driver/DriverMysql
