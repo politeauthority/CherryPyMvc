@@ -130,11 +130,6 @@ class HelperACL( object ):
 
   def getPermByKey( self, key ):
     sql = """SELECT * FROM `%s`.`acl_permissions` WHERE `permKey` = "%s";""" % ( self.database, key )
-    print '**********'
-    print ''
-    print ''
-    print sql
-
     permKeyID = Mysql.ex( sql )
     return permKeyID[0]
 
@@ -172,5 +167,29 @@ class HelperACL( object ):
       update_sql = "UPDATE `%s`.`acl_role_perms` SET `value` = 1 WHERE ID = %s; " % ( self.database, role_perm_exists[0][0] )
       Mysql.ex( update_sql )
 
-# End File: helpers/HelperACL.py
+  ###### ADMIN MAINTAINENCE SECTION ######
 
+  def updateUserRoles( self, user_id, role_ids ):
+    delete_sql = """DELETE FROM `%s`.`acl_user_roles` WHERE `userID` = "%s";""" % ( self.database, user_id )
+    Mysql.ex( delete_sql )
+    for role_id in role_ids:
+      data = {
+        'userID'  : user_id,
+        'roleID'  : role_id,
+        'addDate' : ''
+      }
+      Mysql.insert( 'acl_user_roles', data )
+
+  def updateUserPerms( self, user_id, perm_ids ):
+    delete_sql = """DELETE FROM `%s`.`acl_user_perms` WHERE `userID` = "%s";""" % ( self.database, user_id )
+    Mysql.ex( delete_sql )
+    for perm_id in perm_ids:
+      perm_id
+      data = {
+        'userID'  : user_id,
+        'roleID'  : perm_id,
+        'addDate' : ''
+      }
+      Mysql.insert( 'acl_user_perms', data )
+
+# End File: helpers/HelperACL.py

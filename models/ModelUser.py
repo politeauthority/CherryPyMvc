@@ -29,7 +29,8 @@ class ModelUser( object ):
       'user'       : user[0][1],
       'email'      : user[0][2],
       'last_login' : user[0][4],
-      'meta'       : self.getUserMeta( user[0][0] )
+      'meta'       : self.getUserMeta( user[0][0] ),
+      'perms'      : self.__get_perms( user[0][0] )
     }
     return the_user
 
@@ -122,5 +123,9 @@ class ModelUser( object ):
         'meta_key' : meta_key
       }
     Mysql.update( 'usermeta', data, where )
+
+  def __get_perms( self, user_id ):
+    ACL = MVC.loadHelper( 'ACL', user_id )
+    return ACL
 
 # End File: models/ModelUser.py

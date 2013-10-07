@@ -28,23 +28,26 @@ class MVC( object ):
     #self.cherrypy_config['global']['server.sock_host'] = garden_pi_config['webserver']['host_ip']
     #self.cherrypy_config['/']['tools.staticdir.root']  = '%spublic_html' % self.app_dir
 
-  def loadDriver( self, driver_name ):
-    return self.__load( 'Driver', driver_name )
+  def loadDriver( self, driver_name, args = None ):
+    return self.__load( 'Driver', driver_name, args )
 
-  def loadController( self, controller_name ):
-    return self.__load( 'Controller', controller_name )
+  def loadController( self, controller_name, args = None ):
+    return self.__load( 'Controller', controller_name, args )
 
-  def loadModel( self, model_name ):
-    return self.__load( 'Model', model_name )
+  def loadModel( self, model_name, args = None ):
+    return self.__load( 'Model', model_name, args )
 
-  def loadHelper( self, helper_name ):
-    return self.__load( 'Helper', helper_name )
+  def loadHelper( self, helper_name, args = None ):
+    return self.__load( 'Helper', helper_name, args )
 
-  def __load( self, type, name ):
+  def __load( self, type, name, args = None ):
     path.insert( 1, self.app_dir + type.lower() + 's')
     item_name = type + name
     __import__( item_name )
-    item = getattr( sys.modules[ "%s" % item_name ], "%s" % item_name )()
+    if args:
+      item = getattr( sys.modules[ "%s" % item_name ], "%s" % item_name )( args )      
+    else:
+      item = getattr( sys.modules[ "%s" % item_name ], "%s" % item_name )( )
     return item
 
 # Endfile: MVC.py

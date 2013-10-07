@@ -44,9 +44,26 @@ class ControllerAdmin( object ):
 
   def info( self, user_id = False ):
     User = MVC.loadModel( 'User' )
+    ACL  = MVC.loadHelper( 'ACL' )
     data = {}
     if user_id != False:
-      data['user'] = User.getById( user_id)
+      data['user']  = User.getById( user_id )
+
+      print ' '
+      print data['user']
+      print ' '
+      print ' '
+      print ' '
+      print data['user']['perms'].user_roles
+      print ' '
+      print ' '
+      print ''
+      print data['user']['perms'].perms
+      print ' '
+      print ' '
+      print ''      
+
+      data['roles'] = ACL.getAllRoles()
       return self.Renderer.make( 'admin/users/info.html', data )
     else:
       return 'error'
@@ -78,6 +95,25 @@ class ControllerAdmin( object ):
         User.updatePass( kwargs['user_id'], kwargs['password_1'] )
     raise cherrypy.HTTPRedirect( '/admin/info/%s' % kwargs['user_id'] )
   edit_password.exposed = True
+
+  def user_edit_perms( self, **kwargs ):
+    if kwargs:
+      ACL = MVC.loadHelper( 'ACL' )
+      try:
+        role_ids = kwargs['acl_roles']
+      except:
+        role_ids = []
+      ACL.updateUserRoles( kwargs['user_id'], role_ids )
+
+      try:
+        perm_ids = kwargs['acl_perms']
+      except:
+        perm_ids = []
+
+      return str( perm_ids )
+      ACL.updateUserPerms( kwargs['user_id'], perm_ids )
+    raise cherrypy.HTTPRedirect( '/admin/info/%s' % kwargs['user_id'] )
+  user_edit_perms.exposed = True
 
   def delete_user( self, user_id = None ):
     if user_id:
