@@ -8,16 +8,13 @@
         $('#edit_meta_value').val( row.find('td')[1].outerText )
         $('#edit_meta_id').val( btn.attr('value') )
       });
-
-
-
     });
   </script>
 </_h>
 <_b>
   <!-- Modal -->
   <!-- Modal :: Edit User -->
-  <form action="/admin/edit_user" method="POST">    
+  <form action="/admin/user_edit" method="POST">    
     <div id="modal_editUser" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -44,7 +41,7 @@
   </form>
 
   <!-- Modal :: Change Password -->
-  <form action="/admin/edit_password" method="POST">    
+  <form action="/admin/user_password_edit" method="POST">    
     <div id="modal_changePassword" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -100,7 +97,7 @@
   </form>
 
   <!-- Modal :: Edit User Meta -->
-  <form action="/admin/edit_user_meta" method="POST">   
+  <form action="/admin/user_meta_edit" method="POST">   
     <div id="modal_editMeta" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -145,14 +142,14 @@
     </div>
     <div class="modal-footer">
       <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-      <a href="/admin/delete_user/{{d['user']['id']}}">
+      <a href="/admin/user_delete/{{d['user']['id']}}">
         <button class="btn btn-danger">Delete</button>
       </a>
     </div>
   </div>
 
   <!-- Modal :: Edit Permissions -->
-  <form action="/admin/user_edit_perms" method="POST">
+  <form action="/admin/user_perms_edit" method="POST">
     <div id="modal_editPermission" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -203,7 +200,7 @@
       <ul>
         <li><a href="/admin/users/">Users</a></li>            
         <li><a href="/admin/create/">Create A User</a></li>
-        <li><a href="/admin/roles/">User Roles</a></li>
+        <li><a href="/admin/user_acl/">Access Control List</a></li>
       </ul>
     </div>
 
