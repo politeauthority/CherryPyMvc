@@ -90,11 +90,11 @@ class HelperACL( object ):
       else:
         hP = False
       perm_dict = { 
-        'perm'       : pK,
+        'perm_key'   : pK,
         'inheritted' : False,
         'value'      : hP,
         'name'       : self.getPermNameFromID( rolePerm[2] ),
-        'ID'         : rolePerm[0]
+        'id'         : rolePerm[0]
       }
       perms.append( perm_dict )
     return perms
@@ -113,11 +113,11 @@ class HelperACL( object ):
       else:
         hP = False
       perm_dict = { 
-        'perm'       : pK,
+        'perm_key'   : pK,
         'inheritted' : False,
         'value'      : hP,
         'name'       : self.getPermNameFromID( rolePerm[2] ),
-        'ID'         : rolePerm[0]
+        'id'         : rolePerm[0]
       }
       perms.append( perm_dict )
     return perms
@@ -139,11 +139,6 @@ class HelperACL( object ):
     permKeyID = Mysql.ex( sql )
     return permKeyID[0][0]    
 
-  def addUserRole( self, user_id, role_id ):
-    Time = MVC.loadHelper('Time')    
-    sql = """INSERT INTO `%s`.`acl_user_roles` ( `user_id`, `role_id`, `added` ) VALUES ( "%s", "%s", "%s");""" % ( self.database, user_id, role_id, Time.now() )
-    Mysql.ex( sql )
-
   def createRole( self, role_name ):
     sql = """INSERT INTO `%s`.`acl_roles` ( role_name ) VALUES ( "%s" );""" % ( self.database, role_name )
     Mysql.ex( sql )
@@ -156,6 +151,7 @@ class HelperACL( object ):
       Mysql.ex( sql )
     return self.getPermByKey( perm_key )
 
+  # This method creates a permission ( if it doesnt exist ) and a relationship to a role
   def createRolePerm( self, role_id, perm_id ):
     from datetime import datetime
     sql_check = """SELECT * FROM `%s`.`acl_role_perms` WHERE `role_id` = "%s" AND `perm_id` = "%s";""" % ( self.database, role_id, perm_id )
@@ -169,27 +165,34 @@ class HelperACL( object ):
 
   ###### ADMIN MAINTAINENCE SECTION ######
 
-  def updateUserRoles( self, user_id, role_ids ):
+  def updateUserAccess( self, user_id, role_ids, perm_ids ):
+    from datetime import datetime
+    # Handle User Roles, first remove current
     delete_sql = """DELETE FROM `%s`.`acl_user_roles` WHERE `user_id` = "%s";""" % ( self.database, user_id )
     Mysql.ex( delete_sql )
     for role_id in role_ids:
       data = {
-        'userID'  : user_id,
-        'roleID'  : role_id,
-        'addDate' : ''
+        'user_id' : user_id,
+        'role_id' : role_id,
+        'added'   : datetime.now()      
       }
       Mysql.insert( 'acl_user_roles', data )
+    new_role_perms = self.getRolePerms( role_ids )
 
-  def updateUserPerms( self, user_id, perm_ids ):
+    # Handle User Permissions, remove current, then remove perms associated with a users role, they are unnescisarry
     delete_sql = """DELETE FROM `%s`.`acl_user_perms` WHERE `user_id` = "%s";""" % ( self.database, user_id )
-    Mysql.ex( delete_sql )
+    Mysql.ex( delete_sql )    
     for perm_id in perm_ids:
-      perm_id
-      data = {
-        'userID'  : user_id,
-        'roleID'  : perm_id,
-        'addDate' : ''
-      }
-      Mysql.insert( 'acl_user_perms', data )
+      skip_perm_set = False
+      for new_perm in new_role_perms:       
+        if int( new_perm['id'] ) == int( perm_id ):
+          skip_perm_set = True
+      if skip_perm_set == False:
+        data = {
+          'user_id' : user_id,
+          'perm_id' : perm_id,
+          'added'   : datetime.now()
+        }
+        Mysql.insert( 'acl_user_perms', data )
 
 # End File: helpers/HelperACL.py

@@ -161,17 +161,17 @@
             {% for role in d['roles'] %}
               <thead>
                 <th>
-                  <input name="acl_roles" value="{{role['role_id']}}" {% if role['role_id'] in d['user']['perms'].user_roles %}checked{% endif %} type="checkbox" >
+                  <input name="acl_roles[]" value="{{role['role_id']}}" {% if role['role_id'] in d['user']['perms'].user_roles %}checked{% endif %} type="checkbox" >
                 </th>
                 <th>{{role['name']}}</th>
-                <th> {{role['role_id']}}</th>
+                <th>{{role['role_id']}}</th>
               </thead>
               <tbody>
                 {% if role['perms'] %}
                   {% for perm in role['perms'] %}
                     <tr>
-                      <td><input name="acl_perms['{{perm['perm']}}']" type="checkbox" ></td>
-                      <td>{{perm['perm']}}</td>
+                      <td><input name="acl_perms[]" value="{{perm['id']}}" {% if perm['id'] in d['user']['perms'].perms %}checked{% endif %} type="checkbox" ></td>
+                      <td>{{perm['name']}}</td>
                       <td></td>
                     </tr>
                   {% endfor %}

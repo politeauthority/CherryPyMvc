@@ -44,11 +44,14 @@ class ControllerAdmin( object ):
   users.exposed = True
 
   def info( self, user_id = False ):
-    User = MVC.loadModel( 'User' )
-    ACL  = MVC.loadHelper( 'ACL' )
+    UserModel = MVC.loadModel( 'User' )
+    ACL       = MVC.loadHelper( 'ACL' )
+
+    # user = UserModel.getById( user_id )
     data = {}
+ 
     if user_id != False:
-      data['user']  = User.getById( user_id )
+      data['user']  = UserModel.getById( user_id )
       data['roles'] = ACL.getAllRoles()
       return self.Renderer.make( 'admin/users/info.html', data )
     else:
@@ -87,18 +90,14 @@ class ControllerAdmin( object ):
     if kwargs:
       ACL = MVC.loadHelper( 'ACL' )
       try:
-        role_ids = kwargs['acl_roles']
+        role_ids = kwargs['acl_roles[]']        
       except:
         role_ids = []
-      ACL.updateUserRoles( kwargs['user_id'], role_ids )
-
       try:
-        perm_ids = kwargs['acl_perms']
+        perm_ids = kwargs['acl_perms[]']
       except:
         perm_ids = []
-
-      return str( perm_ids )
-      ACL.updateUserPerms( kwargs['user_id'], perm_ids )
+      ACL.updateUserAccess( kwargs['user_id'], role_ids, perm_ids )
     raise cherrypy.HTTPRedirect( '/admin/info/%s' % kwargs['user_id'] )
   user_perms_edit.exposed = True
 
