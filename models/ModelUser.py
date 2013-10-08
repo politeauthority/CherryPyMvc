@@ -72,10 +72,14 @@ class ModelUser( object ):
     Mysql.update( 'users', data, where )
 
   def delete( self, user_id ):
-    sql = 'DELETE FROM `%s`.`users` WHERE `id` = "%s";' % ( self.db_name, user_id )
-    Mysql.ex( sql )
-    sql_meta = 'DELETE FROM `%s`.`usermeta` WHERE `user_id` = "%s";' % ( self.db_name, user_id )
-    Mysql.ex( sql_meta )
+    sql_user = """DELETE FROM `%s`.`users` WHERE `id` = "%s";""" % ( self.db_name, user_id )
+    sql_user_meta = """DELETE FROM `%s`.`usermeta` WHERE `user_id` = "%s";""" % ( self.db_name, user_id )
+    sql_user_roles = """DELETE FROM `%s`.`acl_user_roles` WHERE `user_id` = "%s";""" % ( self.db_name, user_id )
+    sql_user_perms = """DELETE FROM `%s`.`acl_user_perms` WHERE `user_id` = "%s";""" % ( self.db_name, user_id )
+    Mysql.ex( sql_user )
+    Mysql.ex( sql_user_meta )    
+    Mysql.ex( sql_user_roles )
+    Mysql.ex( sql_user_perms )
     return True
 
   def getUsersWithMeta( self, meta_key ):

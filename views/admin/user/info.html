@@ -132,6 +132,11 @@
   </form>
 
   <!-- Modal :: Edit Permissions -->
+  <style text="type/css">
+    .table-indent{
+      padding-left: 25px !important;
+    }
+  </style>
   <form action="/admin/user/perms_edit" method="POST">
     <div id="modal_editPermission" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-header">
@@ -153,9 +158,9 @@
                 {% if role['perms'] %}
                   {% for perm in role['perms'] %}
                     <tr>
-                      <td><input name="acl_perms[]" value="{{perm['id']}}" {% if perm['id'] in d['user']['perms'].perms %}checked{% endif %} type="checkbox" ></td>
-                      <td>{{perm['name']}}</td>
-                      <td></td>
+                      <td><input name="acl_perms[]" value="{{perm['id']}}" {% if d['user']['perms'].hasPerm( perm['perm_key'] ) %}checked{% endif %} type="checkbox"></td>
+                      <td class="table-indent">{{perm['name']}}</td>
+                      <td>{{d['user']['perms'].hasPerm( perm['perm_key'] )}}</td>
                     </tr>
                   {% endfor %}
                 {% endif %}
