@@ -38,6 +38,4 @@ class ControllerAdminHome( object ):
     return self.Renderer.make('admin/dashboard.html')    
   dashboard.exposed = True
 
-
-
-# End File: controllers/ControllerAdminHome.py
+# End File: controllers/admin/ControllerAdminHome.py

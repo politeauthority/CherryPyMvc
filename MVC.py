@@ -28,19 +28,19 @@ class MVC( object ):
     #self.cherrypy_config['global']['server.sock_host'] = garden_pi_config['webserver']['host_ip']
     #self.cherrypy_config['/']['tools.staticdir.root']  = '%spublic_html' % self.app_dir
 
-  def loadDriver( self, driver_name, args = None ):
-    return self.__load( 'Driver', driver_name, args )
+  def loadDriver( self, driver_name, args = None, callable = False ):
+    return self.__load( 'Driver', driver_name, args = args, callable = callable )
 
-  def loadController( self, controller_name, args = None ):
-    return self.__load( 'Controller', controller_name, args )
+  def loadController( self, controller_name, args = None, callable = False ):
+    return self.__load( 'Controller', controller_name, args = args, callable = callable )
 
-  def loadModel( self, model_name, args = None ):
-    return self.__load( 'Model', model_name, args )
+  def loadModel( self, model_name, args = None, callable = False ):
+    return self.__load( 'Model', model_name, args = args, callable = callable )
 
-  def loadHelper( self, helper_name, args = None ):
-    return self.__load( 'Helper', helper_name, args )
+  def loadHelper( self, helper_name, args = None, callable = False ):
+    return self.__load( 'Helper', helper_name, args = args, callable = callable  )
 
-  def __load( self, type, name, args = None ):
+  def __load( self, type, name, args = None, callable = False ):
     if '/' in name:
       folder = name[ 0 : name.find('/') ]
       name   = name[ name.find('/') + 1 : len( name ) ]
@@ -54,7 +54,10 @@ class MVC( object ):
     if args:
       item = getattr( sys.modules[ "%s" % item_name ], "%s" % item_name )( args )      
     else:
-      item = getattr( sys.modules[ "%s" % item_name ], "%s" % item_name )( )
+      if callable:
+        item = getattr( sys.modules[ "%s" % item_name ], "%s" % item_name )
+      else:
+        item = getattr( sys.modules[ "%s" % item_name ], "%s" % item_name )( )        
     return item
 
 # Endfile: MVC.py
