@@ -14,7 +14,7 @@ import cherrypy
 
 class Root( object ):
   
-  admin = MVC.loadController('Admin')
+  admin = MVC.loadController('admin/AdminHome')
 
   def __init__( self ):  
     self.Renderer          = MVC.loadDriver('Renderer')

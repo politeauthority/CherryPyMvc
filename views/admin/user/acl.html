@@ -1,7 +1,7 @@
 <_b>
   <!-- Modal -->
   <!-- Modal :: Add Role -->
-  <form action="/admin/user_acl_role_update" method="POST">
+  <form action="/admin/user/acl_role_update" method="POST">
     <div id="modal_addRole" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -24,7 +24,7 @@
   </form>
 
   <!-- Modal :: Add Perm -->
-  <form action="/admin/acl_perm_update" method="POST">
+  <form action="/admin/acl/perm_update" method="POST">
     <div id="modal_addPerm" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -66,16 +66,16 @@
 
     <div class="span4 well">
       <ul>
-        <li><a href="/admin/users/">Users</a></li>            
-        <li><a href="/admin/create/">Create A User</a></li>
-        <li><a href="/admin/user_acl/">Access Control List</a></li>
+        <li><a href="/admin/user/">Users</a></li>            
+        <li><a href="/admin/user/create/">Create A User</a></li>
+        <li><a href="/admin/user/acl/">Access Control List</a></li>
       </ul>
     </div>
 
     <div class="span8 container-fluid">
       <div class="row-fluid">
         <div class="span8">
-          Users >> Access Control
+          <a href="/admin/user">Users</a> >> Access Control
         </div>
         <div class="span4">
           <div class="btn-group">
@@ -110,15 +110,14 @@
                   {% if role['perms'] %}
                     {% for perm in role['perms'] %}
                       <tr>
-                      
                         <td></td>
-                        <td>{{perm['perm']}}</td>
+                        <td>{{perm['perm_key']}}</td>
                         <td></td>
                       </tr>
                     {% endfor %}
                   {% endif %}
                 {% endfor %}
-              {%else%}
+              {% else %}
                 <tr colspan="2">
                   <td></td>
                 </tr>

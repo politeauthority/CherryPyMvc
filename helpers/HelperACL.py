@@ -31,7 +31,7 @@ class HelperACL( object ):
 
   def hasPerm( self, perm_key ):
     for perm in self.perms:
-      if perm['perm'] == perm_key:
+      if perm['perm_key'] == perm_key:
         if perm['value'] == 1:
           return True
         else:
@@ -66,7 +66,7 @@ class HelperACL( object ):
     return roles
 
   # Get the PERMISSIONS assigned to a ROLE
-  # @param : role list or string
+  # @param : role ( list or string )
   def getRolePerms( self, roles ):
     sql = """SELECT * FROM `%s`.`acl_role_perms` WHERE `role_id` """ % self.database
     if isinstance( roles, types.ListType ):

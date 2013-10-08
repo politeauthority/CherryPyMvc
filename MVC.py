@@ -41,7 +41,14 @@ class MVC( object ):
     return self.__load( 'Helper', helper_name, args )
 
   def __load( self, type, name, args = None ):
-    path.insert( 1, self.app_dir + type.lower() + 's')
+    if '/' in name:
+      folder = name[ 0 : name.find('/') ]
+      name   = name[ name.find('/') + 1 : len( name ) ]
+      path.insert( 1, self.app_dir + type.lower() + 's/' + folder )
+      print self.app_dir + type.lower() + 's/' + folder
+    else:
+      path.insert( 1, self.app_dir + type.lower() + 's' )
+
     item_name = type + name
     __import__( item_name )
     if args:
