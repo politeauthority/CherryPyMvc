@@ -30,15 +30,18 @@ class DriverMysql( object ):
 
   def insert(self, table, items ):
     columns = []
-    values = []
+    values  = []
     for column, value in items.items():
       columns.append(column)
       values.append( str(value) )
-    column_sql = ','.join( columns )
+    column_sql = ''
+    for column in columns:
+      column_sql = column_sql + "`%s`," % column
+    column_sql = column_sql.rstrip( column_sql[-1:] )
     value_sql = ''
     for value in values:
-        value_sql = value_sql + '"%s",' % self.escape_string( value )
-    value_sql = value_sql.rstrip( value_sql[-1:])
+      value_sql = value_sql + '"%s",' % self.escape_string( value )
+    value_sql = value_sql.rstrip( value_sql[-1:] )
 
     sql = """INSERT INTO `%s`.`%s` (%s) VALUES(%s);""" % ( self.dbname, table, column_sql, value_sql )
     self.ex( sql )

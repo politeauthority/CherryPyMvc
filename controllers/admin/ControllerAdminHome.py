@@ -28,7 +28,12 @@ class ControllerAdminHome( object ):
   # @todo: make this work!
   def auth( self, **kwargs ):
     if kwargs:
-      print ''
+      UserModel = MVC.loadModel('User')
+      user      = UserModel.auth( kwargs['user_name'], kwargs['password'] )
+      if user:
+        return 'youre in'
+      else:
+        return 'youre out'
     else:
       print ''
     return ''

@@ -1,6 +1,6 @@
 #!/usr/bin/python                                                                                                
 # User Model
-# This model controls interactions with the indoor and outdoor weather actions which need to occur
+# This model controls interactions with the user tables, aside from the ACL
 import sys
 import os
 
@@ -17,33 +17,36 @@ class ModelUser( object ):
     self.db_name = MVC.db['name']
 
   def getByName( self, user_name ):
-    sql = 'SELECT * FROM `%s`.`users` WHERE `user` = "%s" LIMIT 1;' % ( MVC.db['name'], user_name )
+    sql = """SELECT * FROM `%s`.`users` WHERE `user` = "%s" LIMIT 1;""" % ( MVC.db['name'], user_name )
     user = Mysql.ex( sql )
     return user
 
   def getById( self, user_id ):
-    sql = 'SELECT * FROM `%s`.`users` WHERE `id` = "%s" LIMIT 1;' % ( MVC.db['name'], user_id )
+    sql = """SELECT * FROM `%s`.`users` WHERE `id` = "%s" LIMIT 1;""" % ( MVC.db['name'], user_id )
     user = Mysql.ex( sql )
-    the_user = {
-      'id'         : user[0][0],
-      'user'       : user[0][1],
-      'email'      : user[0][2],
-      'last_login' : user[0][4],
-      'meta'       : self.getUserMeta( user[0][0] ),
-      'perms'      : self.__get_perms( user[0][0] )
-    }
+    try:
+      the_user = {
+        'id'         : user[0][0],
+        'user'       : user[0][1],
+        'email'      : user[0][2],
+        'last_login' : user[0][4],
+        'meta'       : self.getUserMeta( user[0][0] ),
+        'perms'      : self.__get_perms( user[0][0] )
+      }
+    except:
+      raise NameError( 'Bad User ID' )
     return the_user
 
   def getAll( self ):
-    sql = 'SELECT * FROM `%s`.`users`;' % self.db_name
+    sql = """SELECT * FROM `%s`.`users`;""" % self.db_name
     users = Mysql.ex( sql )
     return users
 
-  def auth( user_name, password ):
-    sql = 'SELECT * FROM %s.users WHERE `user` = "%s" AND `pass` = MD5( "%s" )' % ( user_name, password )
+  def auth( self, user_name, password ):
+    sql = """SELECT * FROM `%s`.`users` WHERE `user` = "%s" AND `pass` = MD5( "%s" ) LIMIT 1;""" % ( self.db_name, user_name, password )
     auth = Mysql.ex( sql )
     if auth:
-      return self.getById( auth[0] )
+      return self.getById( auth[0][0] )
     else:
       return False
   
@@ -67,7 +70,10 @@ class ModelUser( object ):
     Mysql.update( 'users', data, where )
 
   def updatePass( self, user_id, password ):
-    data  = { 'pass' : password }
+    import hashlib
+    m = hashlib.md5()
+    m.update( password )
+    data  = { 'pass' : m.hexdigest() }
     where = { 'id'   : user_id }
     Mysql.update( 'users', data, where )
 
@@ -83,7 +89,7 @@ class ModelUser( object ):
     return True
 
   def getUsersWithMeta( self, meta_key ):
-    sql = 'SELECT * FROM %s.usermeta WHERE `meta_key` = "%s";' % ( self.db_name, meta_key  )
+    sql = """SELECT * FROM `%s`.`usermeta` WHERE `meta_key` = "%s";""" % ( self.db_name, meta_key  )
     meta_records = Mysql.ex( sql )
     users = []
     for meta in meta_records:
@@ -91,7 +97,7 @@ class ModelUser( object ):
     return users
 
   def getUserMeta( self, user_id ):
-    sql = 'SELECT * FROM `%s`.`usermeta` WHERE `user_id` = "%s"' % ( MVC.db['name'], user_id )
+    sql = """SELECT * FROM `%s`.`usermeta` WHERE `user_id` = "%s";""" % ( MVC.db['name'], user_id )
     user_meta = Mysql.ex( sql )
     meta_dict = {}
     for meta in user_meta:
@@ -115,13 +121,9 @@ class ModelUser( object ):
         'meta_key'  : meta_key,
         'meta_value': meta_value
       }
-      where = {
-        'id' : meta_id
-      }
+      where = { 'id' : meta_id }
     else:
-      data = {
-        'meta_value' : meta_value,
-      }
+      data = { 'meta_value' : meta_value }
       where = {
         'user_id'  : user_id,
         'meta_key' : meta_key
