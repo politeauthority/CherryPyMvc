@@ -45,7 +45,6 @@ class MVC( object ):
       folder = name[ 0 : name.find('/') ]
       name   = name[ name.find('/') + 1 : len( name ) ]
       path.insert( 1, self.app_dir + type.lower() + 's/' + folder )
-      print self.app_dir + type.lower() + 's/' + folder
     else:
       path.insert( 1, self.app_dir + type.lower() + 's' )
 
