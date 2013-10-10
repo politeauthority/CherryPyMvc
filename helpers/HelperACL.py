@@ -32,12 +32,11 @@ class HelperACL( object ):
   def hasPerm( self, perm_key ):
     for perm in self.perms:
       if perm['perm_key'] == perm_key:
-        if perm['value'] == 1:
+        if perm['value'] == True:
           return True
         else:
           return False
-      else:
-        return False
+    return False
 
   def buildACL( self ):
     if self.user_id:
@@ -76,7 +75,10 @@ class HelperACL( object ):
       role_ids = role_ids[:-1]
       sql += 'IN ( %s ) ORDER BY `id` ASC;' % role_ids
     else:
-      sql += 'IN ( %s ) ORDER BY `id` ASC;' % roles 
+      if roles != '':
+        sql += 'IN ( %s ) ORDER BY `id` ASC;' % roles 
+      else:
+        return []
 
     rolePerms = Mysql.ex( sql )
 
@@ -196,3 +198,15 @@ class HelperACL( object ):
         Mysql.insert( 'acl_user_perms', data )
 
 # End File: helpers/HelperACL.py
+
+# Debug section, this can be deleted out soon
+if __name__ == "__main__":
+  ACL = HelperACL( 2 )
+  for perm in ACL.perms:
+    print 'ID: %s     Key: %s      Value: %s ' % ( perm['id'], perm['perm_key'], perm['value'] )
+  print ''
+  print ACL.user_roles
+  print ''
+  print ''
+
+  print 'access-admin: ' + str( ACL.hasPerm('access-admin') )

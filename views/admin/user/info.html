@@ -7,6 +7,7 @@
         $('#edit_meta_key').val( row.find('td')[0].outerText )
         $('#edit_meta_value').val( row.find('td')[1].outerText )
         $('#edit_meta_id').val( btn.attr('value') )
+        $('#meta_delete').attr( 'href', $('#meta_delete').attr('href') + btn.attr('value') + '/' )
       });
     });
   </script>
@@ -115,7 +116,7 @@
           </tr> 
           <tr>
             <td colspan="2">
-              <a href="/admin/settings_delete/"><button class="btn btn-danger">Delete</button></a>NEEDS JS FINISH
+              <a id="meta_delete" href="/admin/user/meta_delete/{{d['user']['id']}}/" class="btn btn-danger">Delete</a>
             </td>
           </tr>    
         </table>
@@ -225,7 +226,7 @@
             <ul class="dropdown-menu">
               <li><a href="#modal_addMeta" role="button" data-toggle="modal">Add Meta</a></li>
               <li><a href="#modal_editUser" role="button" data-toggle="modal">Edit</a></li>
-	      <li><a href="#modal_editPermission" role="button" data-toggle="modal">Edit Permissions</a></li>
+              <li><a href="#modal_editPermission" role="button" data-toggle="modal">Edit Permissions</a></li>
               <li><a href="#modal_changePassword" role="button" data-toggle="modal">Change Password</a></li>
               <li><a href="#modal_deleteUser" role="button" data-toggle="modal">Delete</a></li>
             </ul>
@@ -290,12 +291,12 @@
         <div class="span6">
           <h4>Permissions</h4>
           {% if d['user']['perms'].perms|length > 0  %}
-	    <p>Here are the users permissions</p>
-	  {% else %}
-	    <a href="#modal_editPermission" role="button" data-toggle="modal">
-	      <button class="btn btn-primary">Add Permission</button>
+            <p>Here are the users permissions</p>
+          {% else %}
+            <a href="#modal_editPermission" role="button" data-toggle="modal">
+              <button class="btn btn-primary">Add Permission</button>
             </a>
-	  {% endif %}
+          {% endif %}
         </div>
 
       </div>

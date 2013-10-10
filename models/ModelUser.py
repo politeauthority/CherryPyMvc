@@ -130,6 +130,10 @@ class ModelUser( object ):
       }
     Mysql.update( 'usermeta', data, where )
 
+  def deleteMeta( self, meta_id ):
+    sql = """DELETE FROM `%s`.`usermeta` WHERE `id` = "%s"; """ % ( self.db_name, meta_id )
+    Mysql.ex( sql )
+
   def __get_perms( self, user_id ):
     ACL = MVC.loadHelper( 'ACL', user_id )
     return ACL
