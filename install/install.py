@@ -11,6 +11,7 @@ MVC = MVC()
 import subprocess
 
 #install our python dependancies
+subprocess.call( "apt-get install python-mysqldb",   shell=True )
 subprocess.call( "apt-get install python-cherrypy3", shell=True )
 subprocess.call( "apt-get install python-jinja2",   shell=True )
 subprocess.call( "apt-get install python-bs4",   shell=True )
